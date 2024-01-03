@@ -21,32 +21,28 @@ func ReadLetter(Game *HangmanGame) []int {
 	return index_slice
 }
 
-func LetterEntered(Game *HangmanGame) {
+func LetterEntered(Game *HangmanGame, letter string) {
 	for {
-		//User input
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Print("Enter a letter : ")
-		scanner.Scan()
-		letter := scanner.Text()
+		//Variables
 		rune_letter := []rune(letter)
 		valid_letter := true
 
 		//If the user input is empty
 		if len(rune_letter) == 0 {
-			fmt.Println("You have not entered any characters.")
+			Game.Error = "You have not entered any characters."
 			valid_letter = false
 		}
 
 		//If the text entered by the user isn't a letter
 		if len(rune_letter) != 0 && !unicode.IsLetter(rune_letter[0]) || len(rune_letter) > 1 {
-			fmt.Println("The character you have entered is not a letter. Please enter a valid character.")
+			Game.Error = "The character you have entered is not a letter. Please enter a valid character."
 			valid_letter = false
 		}
 
 		//If the letter has already been proposed by the user
 		for j := 0; j < len(Game.Letters_used); j++ {
 			if Game.Letters_used[j] == letter {
-				fmt.Println("You have already proposed this letter, please make another choice.")
+				Game.Error = "You have already proposed this letter, please make another choice."
 				valid_letter = false
 			}
 		}
