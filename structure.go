@@ -7,4 +7,5 @@ type HangmanGame struct {
 	Letters_used   []string
 	Attempts       int
 	Error		   string
+	GameComplete   bool
 }

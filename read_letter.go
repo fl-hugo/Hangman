@@ -7,21 +7,42 @@ import (
 	"unicode"
 )
 
-func ReadLetter(Game *HangmanGame) []int {
+func AnalyseLetter(Game *HangmanGame) {
 	word := Game.Word
 	word_displayed := Game.Word_displayed
-	index_slice := []int{}
+	letter_found := []int{}
 
 	//Find the letters in the word
 	for i := 0; i < len(word); i++ {
 		if string(word[i]) == Game.Letter && string(word_displayed[i]) != Game.Letter {
-			index_slice = append(index_slice, i)
+			letter_found = append(letter_found, i)
 		}
 	}
-	return index_slice
+
+	//The letter isn't present in the word
+	if len(letter_found) == 0 {
+		Game.Error = "This letter is not present in the word."
+		Game.Attempts--
+	}
+
+	//The letter is present in the word
+	if len(letter_found) != 0 {
+		rune_word_displayed := []rune(Game.Word_displayed)
+
+		//Display all letters found
+		if len(letter_found) == 1 {
+			rune_word_displayed[letter_found[0]] = rune_word[letter_found[0]]
+		} else {
+			for i := 0; i < len(letter_found); i++ {
+				index := letter_found[i]
+				rune_word_displayed[index] = rune_word[index]
+			}
+		}
+		Game.Word_displayed = string(rune_word_displayed)
+	}
 }
 
-func LetterEntered(Game *HangmanGame, letter string) {
+func ValidLetter(Game *HangmanGame, letter string) {
 	for {
 		//Variables
 		rune_letter := []rune(letter)
@@ -38,7 +59,7 @@ func LetterEntered(Game *HangmanGame, letter string) {
 			Game.Error = "The character you have entered is not a letter. Please enter a valid character."
 			valid_letter = false
 		}
-
+ 
 		//If the letter has already been proposed by the user
 		for j := 0; j < len(Game.Letters_used); j++ {
 			if Game.Letters_used[j] == letter {
