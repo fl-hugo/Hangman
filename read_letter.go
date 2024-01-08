@@ -1,14 +1,12 @@
 package Hangman
 
 import (
-	"bufio"
-	"fmt"
-	"os"
 	"unicode"
 )
 
 func AnalyseLetter(Game *HangmanGame) {
 	word := Game.Word
+	rune_word := []rune(word)
 	word_displayed := Game.Word_displayed
 	letter_found := []int{}
 
