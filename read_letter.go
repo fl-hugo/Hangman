@@ -19,7 +19,6 @@ func AnalyseLetter(Game *HangmanGame) {
 
 	//The letter isn't present in the word
 	if len(letter_found) == 0 {
-		Game.Error = "This letter is not present in the word."
 		Game.Attempts--
 	}
 
@@ -41,36 +40,34 @@ func AnalyseLetter(Game *HangmanGame) {
 }
 
 func ValidLetter(Game *HangmanGame, letter string) {
-	for {
-		//Variables
-		rune_letter := []rune(letter)
-		valid_letter := true
+	//Variables
+	rune_letter := []rune(letter)
+	valid_letter := true
 
-		//If the user input is empty
-		if len(rune_letter) == 0 {
-			Game.Error = "You have not entered any characters."
+	//If the user input is empty
+	if len(rune_letter) == 0 {
+		Game.Error = "You have not entered any characters."
+		valid_letter = false
+	}
+
+	//If the text entered by the user isn't a letter
+	if len(rune_letter) != 0 && !unicode.IsLetter(rune_letter[0]) || len(rune_letter) > 1 {
+		Game.Error = "The character you have entered is not a letter. Please enter a valid character."
+		valid_letter = false
+	}
+
+	//If the letter has already been proposed by the user
+	for j := 0; j < len(Game.Letters_used); j++ {
+		if Game.Letters_used[j] == letter {
+			Game.Error = "You have already proposed this letter, please make another choice."
 			valid_letter = false
 		}
+	}
 
-		//If the text entered by the user isn't a letter
-		if len(rune_letter) != 0 && !unicode.IsLetter(rune_letter[0]) || len(rune_letter) > 1 {
-			Game.Error = "The character you have entered is not a letter. Please enter a valid character."
-			valid_letter = false
-		}
- 
-		//If the letter has already been proposed by the user
-		for j := 0; j < len(Game.Letters_used); j++ {
-			if Game.Letters_used[j] == letter {
-				Game.Error = "You have already proposed this letter, please make another choice."
-				valid_letter = false
-			}
-		}
-
-		//Manage the letter
-		if valid_letter {
-			Game.Letters_used = append(Game.Letters_used, letter)
-			Game.Letter = letter
-			break
-		}
+	//Manage the letter
+	if valid_letter {
+		Game.Letters_used = append(Game.Letters_used, letter)
+		Game.Letter = letter
+		Game.Error = ""
 	}
 }
